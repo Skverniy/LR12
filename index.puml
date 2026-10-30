@@ -1,0 +1,65 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide circle
+
+enum DeviceStatus {
+  ON
+  OFF
+  ERROR
+}
+
+class Пользователь {
+  - id: int
+  - name: String
+  - role: String
+  + отправитьКоманду(): void
+  + создатьСценарий(): void
+}
+
+class Комната {
+  - id: int
+  - name: String
+}
+
+class Устройство {
+  - id: int
+  - type: String
+  - status: DeviceStatus
+  + включить(): void
+  + выключить(): void
+  + обновитьСтатус(): void
+}
+
+class Хаб {
+  - id: int
+  - ipAddress: String
+  + обработатьКоманду(): void
+  + записатьСобытие(): void
+}
+
+class Сценарий {
+  - id: int
+  - name: String
+  + активировать(): void
+}
+
+class Событие {
+  - id: int
+  - time: DateTime
+  - type: String
+}
+
+class Действие {
+  - id: int
+  - actionType: String
+}
+
+Пользователь "1" --> "0..*" Сценарий : создает >
+Пользователь "1" --> "0..*" Устройство : управляет >
+Комната "1" o-- "0..*" Устройство : содержит >
+Хаб "1" --> "0..*" Устройство : отправляет команды >
+Сценарий "1" *-- "1..*" Событие : фиксирует >
+Устройство "1" *-- "0..*" Действие : выполняет >
+Устройство --> DeviceStatus
+
+@enduml
